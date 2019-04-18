@@ -1,0 +1,41 @@
+/*
+ * POJ3090  Visible Lattice Points
+ * 欧拉函数
+ */
+
+#include<cstdio>
+using namespace std;
+
+int C,N;
+
+//欧拉函数模板
+int Euler(int n) {
+    int num = n;
+    for(int i = 2;i <= n;i++) {
+        if(n % i == 0) {
+            num = num / i * (i-1);
+        }
+        while(n % i == 0) {
+            n /= i;
+        }
+    }
+    return num;
+}
+
+int solve(int n) {
+    int sum = 0;
+    if(n == 1)
+        return 3;
+    sum = solve(n-1);
+    sum += 2*Euler(n);
+    return sum;
+}
+
+int main() {
+    scanf("%d",&C);
+    for(int i = 1;i <= C;i++) {
+        scanf("%d",&N);
+        printf("%d %d %d\n",i,N,solve(N));
+    }
+    return 0;
+}
