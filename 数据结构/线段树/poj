@@ -1,0 +1,78 @@
+/*
+ * 线段树区间查询问题
+ * poj 3264
+ * https://www.2cto.com/kf/201609/548266.html
+ */
+
+#include <cstdio>
+#include <algorithm>
+
+using namespace std;
+
+#define lson rt<<1,l,m
+#define rson rt<<1|1,m  +1,r
+
+const int maxn = 200005;
+const int INF = 0x3f3f3f3f;
+
+int Max[maxn<<2],Min[maxn<<1];
+
+void pushup(int rt) {
+    Max[rt] = max(Max[rt<<1],Max[rt<<1|1]);
+    Min[rt] = min(Min[rt<<1],Min[rt<<1|1]);
+}
+
+void build(int rt,int l,int r) {
+    if(l == r) {
+        scanf("%d",&Max[rt]);
+        Min[rt] = Max[rt];
+        return;
+    }
+    int m = (l+r)>>1;
+    build(lson);
+    build(rson);
+    pushup(rt);
+}
+
+int queryMax(int rt,int l,int r,int x,int y) {
+    if (x <= l && y >= r) {
+        return Max[rt];
+    }
+    int m = (l+r)>>1;
+    int ret = -1;
+    if(x <= m) {
+        ret = max(ret,queryMax(lson,x,y));
+    }
+    if(y > m) {
+        ret = max(ret,queryMax(rson,x,y));
+    }
+    return ret;
+}
+
+int queryMin(int rt,int l,int r,int x,int y) {
+    if(x <= l && y >= r) {
+        return Min[rt];
+    }
+    int m = (l+r)>>1;
+    int ret = INF;
+    if(x <= m) {
+        ret = min(ret,queryMin(lson,x,y));
+    }
+    if (y > m) {
+        ret = min(ret,queryMin(rson,x,y));
+    }
+    return ret;
+}
+
+int main() {
+    int n,q;
+    while(scanf("%d%d",&n,&q) != EOF) {
+        build(1,1,n);
+        while(q--) {
+            int l,r;
+            scanf("%d%d",&l,&r);
+            printf("%d\n",queryMax(1,1,n,l,r) - queryMin(1,1,n,l,r));
+        }
+    }
+    return 0;
+}
