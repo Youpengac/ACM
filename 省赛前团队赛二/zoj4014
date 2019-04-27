@@ -1,0 +1,38 @@
+/*
+ * 反思：
+ * 1.遇到简单题别激动，先把它所有的输入任务都完成了，在考虑处理的问题
+ * 2.当你的程序没有按回车就全部运行完的时候，这段程序十有八九是有问题的，
+ * 仔细检查是不是输入没输入全，或者特殊字符没处理或者运行过程中遇到问题了。
+ */
+
+#include <cstdio>
+
+using namespace std;
+
+int test;
+int n, m, a, b;
+int x, sum, cnt;
+
+int main() {
+    scanf("%d", &test);
+    while (test--) {
+        scanf("%d%d%d%d", &n, &m, &a, &b);
+        sum = n * m;
+        if (a > b) {
+            while (sum--) {
+                scanf("%d", &x);
+            }
+            printf("No Solution\n");
+        } else {
+            cnt = 0;
+            while (sum--) {
+                scanf("%d", &x);
+                if (x < a || x > b) {
+                    cnt++;
+                }
+            }
+            printf("%d\n", cnt);
+        }
+    }
+    return 0;
+}
