@@ -1,0 +1,47 @@
+/*
+ * 经典的深搜（DFS）
+ * 八皇后或者n皇后问题
+ * url:http://acm.hdu.edu.cn/showproblem.php?pid=2553
+ */
+
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+const int maxn = 11;
+
+int vis[3][3 * maxn];
+int dp[maxn];
+
+int n, tot, x;
+
+void dfs(int cur) {
+    if (cur > n) {
+        tot++;
+        return;
+    } else {
+        for (int i = 1; i <= n; i++) {
+            if (!vis[0][i] && !vis[1][cur + i] && !vis[2][cur - i + n]) {
+                vis[0][i] = vis[1][cur + i] = vis[2][cur - i + n] = true;
+                dfs(cur + 1);
+                vis[0][i] = vis[1][cur + i] = vis[2][cur - i + n] = false;
+            }
+        }
+    }
+}
+
+int main() {
+    for (n = 1; n <= 10; n++) {
+        memset(vis, false, sizeof(vis));
+        tot = 0;
+        dfs(1);
+        dp[n] = tot;
+    }
+    while (scanf("%d", &x) != EOF) {
+        if (x == 0)
+            return 0;
+        printf("%d\n", dp[x]);
+    }
+    return 0;
+}
