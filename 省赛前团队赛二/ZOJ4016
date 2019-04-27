@@ -1,0 +1,69 @@
+/*
+ * ZOJ 4016
+ * 用数组实现栈的一些操作
+ * url:http://acm.zju.edu.cn/onlinejudge/showProblem.do?problemCode=4016
+ */
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+const int maxn = 300005;
+
+int arr[maxn]; //存放所有的数据
+
+//top代表栈顶元素在arr中的下标，
+//Next代表栈顶元素下一个元素在arr中的下标，用于实现在栈顶元素被抛出后，栈顶新的指向，
+//bottom代表栈低元素在arr中的位置
+int top[maxn], Next[maxn], bottom[maxn];
+
+int main() {
+    int T;
+    scanf("%d", &T);
+    int n, q;
+    int op, cnt;
+    int s, v, t;
+    while (T--) {
+        cnt = 0;
+        memset(top, 0, sizeof(top));
+        memset(Next, 0, sizeof(Next));
+        memset(bottom, 0, sizeof(bottom));
+        scanf("%d%d", &n, &q);
+        while (q--) {
+            scanf("%d", &op);
+            if (op == 1) {
+                scanf("%d%d", &s, &v);
+                arr[++cnt] = v;
+                if (bottom[s] == 0) {  //如果原先栈为空，新加入的第一个元素将成为栈底元素
+                    bottom[s] = cnt;
+                }
+                //更新栈顶元素和栈顶的下一个元素
+                Next[cnt] = top[s]; //也可写作Next[top[s]] = top[s];
+                top[s] = cnt;
+            } else if (op == 2) {
+                scanf("%d", &s);
+                if (top[s]) {
+                    printf("%d\n", arr[top[s]]); //抛出栈顶元素，注意，top存放的是栈顶元素在arr中的下标
+                    top[s] = Next[top[s]]; //栈顶元素重定向
+                    if (top[s] == 0) {  //若栈为空，则栈顶和栈底都置为0，容易忽略这个判断
+                        bottom[s] = 0;
+                    }
+                } else {
+                    printf("EMPTY\n");
+                }
+            } else if (op == 3) {
+                scanf("%d%d", &s, &t);
+                if (top[t]) {
+                    if (bottom[s] == 0) {  //如果第s个栈为空，则s的栈底就是t的栈底
+                        bottom[s] = bottom[t];
+                    }
+                    //t的栈底元素的下一个为s的栈顶元素，这里不用在重定向s栈顶元素的下一个元素，因为t已经指定过了
+                    Next[bottom[t]] = top[s];
+                    top[s] = top[t];
+                }
+                top[t] = bottom[t] = 0; //把第t个栈置为空，容易忽略
+            }
+        }
+    }
+    return 0;
+}
